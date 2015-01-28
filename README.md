@@ -1,6 +1,6 @@
 # Microsoft Azure API Management
 
-With Microsoft Azure Mobile Services you can add publish APIs to developers, partners and employees and ensure a successful API program through developer engagement, business insights, analytics, security, and protection.
+With Microsoft Azure API Management you can add publish APIs to developers, partners and employees and ensure a successful API program through developer engagement, business insights, analytics, security, and protection.
 
 To learn more, visit our [documentation](http://azure.microsoft.com/en-us/documentation/services/api-management/).
 
@@ -12,8 +12,8 @@ If you are new to API Management, you can read our [getting started guide](http:
 
 To get the source code of our samples via **git** just type:
 
-    git clone https://github.com/Azure/azure-api-management-samples.git
-    cd ./azure-api-management-samples/
+    git clone https://github.com/Azure/api-management-samples.git
+    cd ./api-management-samples/
 
 
 
