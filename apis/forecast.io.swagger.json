@@ -1,0 +1,67 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Forecast API",
+    "description": "The Forecast API lets you query for most locations on the globe, and returns: current conditions, minute-by-minute forecasts out to 1 hour (where available), hour-by-hour forecasts out to 48 hours, and more.",
+    "version": "1.0"
+  },
+  "host": "api.forecast.io",
+  "basePath": "",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/forecast/{apiKey}/{latitude},{longitude}": {
+      "get": {
+        "description": "Get forecast for a geographical location specified by its latitude and longitude.",
+        "operationId": "Forecast",
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "path",
+            "description": "Your forecast.io API key.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "in": "path",
+            "description": "Requested latitude.",
+            "required": true,
+            "type": "string",
+            "default": 41.8369,
+            "enum": [41.8369]
+          },
+          {
+            "name": "longitude",
+            "in": "path",
+            "description": "Requested longitude.",
+            "required": true,
+            "type": "string",
+            "default": -87.6847,
+            "enum": [-87.6847]
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "description": "Use units other than the default Imperial units in the response. Possible values are <code>us</code> (default), <code>si</code>, <code>uk</code>, <code>ca</code>",
+            "type": "string",
+            "default": "us",
+            "enum": ["us", "si", "uk", "ci"]
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "description": "Exclude specified data blocks from the API response. Block names should be provided as a comma-delimeted list. Allowed values are <code>currently</code>, <code>minutely</code>, <code>hourly</code>, <code>daily</code>, <code>alerts</code>, <code>flags</code>",
+            "type": "string",
+            "default": "minutely,hourly,daily,flags,alerts",
+            "enum": [
+              "minutely,hourly,daily,flags,alerts"
+            ]
+          }
+        ],
+        "responses": {}
+      }
+    }
+  }
+}

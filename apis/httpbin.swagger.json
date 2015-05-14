@@ -1,0 +1,132 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "httpbin.org",
+    "description": "API Management facade for a very handy and free online HTTP tool.",
+    "version": "1.0"
+  },
+  "host": "httpbin.org",
+  "basePath": "",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/status/{code}": {
+      "get": {
+        "description": "Returns provided HTTP Status code.",
+        "operationId": "/status",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "HTTP code to return.",
+            "required": true,
+            "type": "number",
+            "default": 200,
+            "enum": [200]
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/get": {
+      "get": {
+        "description": "Returns GET data.",
+        "operationId": "/get",
+        "responses": {}
+      }
+    },
+    "/post": {
+      "post": {
+        "description": "Returns POST data.",
+        "operationId": "/post",
+        "responses": {}
+      }
+    },
+    "/patch": {
+      "patch": {
+        "description": "Returns PATCH data.",
+        "operationId": "/patch",
+        "responses": {}
+      }
+    },
+    "/put": {
+      "put": {
+        "description": "Returns PUT data.",
+        "operationId": "/put",
+        "responses": {}
+      }
+    },
+    "/delete": {
+      "delete": {
+        "description": "Returns DELETE data.",
+        "operationId": "/delete",
+        "responses": {}
+      }
+    },
+    "/xml": {
+      "get": {
+        "description": "Returns some XML.",
+        "operationId": "/xml",
+        "responses": {}
+      }
+    },
+    "/ip": {
+      "get": {
+        "description": "Returns origin IP.",
+        "operationId": "/ip",
+        "responses": {}
+      }
+    },
+    "/user-agent": {
+      "get": {
+        "description": "Returns user agent string.",
+        "operationId": "/user-agent",
+        "responses": {}
+      }
+    },
+    "/headers": {
+      "get": {
+        "description": "Returns headers dictionary.",
+        "operationId": "/headers",
+        "responses": {}
+      }
+    },
+    "/delay/{seconds}": {
+      "get": {
+        "description": "Delays responding for n–10 seconds.",
+        "operationId": "/delay",
+        "parameters": [
+          {
+            "name": "seconds",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "default": 2,
+            "enum": [2]
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/cache/{maxAge}": {
+      "get": {
+        "operationId": "/cache",
+        "parameters": [
+          {
+            "name": "maxAge",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "default": 10,
+            "enum": [10]
+          }
+        ],
+        "responses": {}
+      }
+    }
+  }
+}
