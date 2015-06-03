@@ -15,6 +15,9 @@ To get the source code of our samples via **git** just type:
     git clone https://github.com/Azure/api-management-samples.git
     cd ./api-management-samples/
 
+## Sample Index
+-	[delegation](./delegation) - This sample is based on the [video tutorial](https://www.youtube.com/watch?v=z2pU_aHphbw&index=9&list=PL8nfc9haGeb4khJEFcDU9Lluit5nYlB3a) for using delegation.
+-	[restApiDemo](./restApiDemo) - This sample shows how to call the Api Management REST APIs using C#.
 
 
 ## Need Help?
