@@ -1,0 +1,35 @@
+<!-- Copy the following snippet into the inbound section at the api (or higher) level to pre-authorize access to operations based on token claims -->
+<set-variable name="signingKey" value="insert signing key here" />
+<choose>
+	<when condition="@(context.Request.Method.Equals("patch",StringComparison.OrdinalIgnoreCase))">
+		<validate-jwt header-name="Authorization">
+			<issuer-signing-keys>
+				<key>@((string)context.Variables["signingKey"])</key>
+			</issuer-signing-keys>
+			<required-claims>
+				<claim name="edit">
+					<value>true</value>
+				</claim>
+			</required-claims>
+		</validate-jwt>
+	</when>
+	<when condition="@(new [] {"post", "put"}.Contains(context.Request.Method,StringComparer.OrdinalIgnoreCase))">
+		<validate-jwt header-name="Authorization">
+			<issuer-signing-keys>
+				<key>@((string)context.Variables["signingKey"])</key>
+			</issuer-signing-keys>
+			<required-claims>
+				<claim name="create">
+					<value>true</value>
+				</claim>
+			</required-claims>
+		</validate-jwt>
+	</when>
+	<otherwise>
+		<validate-jwt header-name="Authorization">
+			<issuer-signing-keys>
+				<key>@((string)context.Variables["signingKey"])</key>
+			</issuer-signing-keys>
+		</validate-jwt>
+	</otherwise>
+</choose>
