@@ -1,0 +1,10 @@
+<!-- Copy this snippet into the inbound element to forward a piece of context, product name in this example, to the backend service for logging or evaluation -->
+<set-query-parameter name="x-product-name" exists-action="override">
+	<value>@(context.Product.Name)</value>
+</set-query-parameter>
+
+<!-- Copy this snippet into the inbound element to forward some context information, user id and the region proxy is hosted in, to the backend service for logging or evaluation -->
+<set-header name="x-request-context-data" exists-action="override">
+	<value>@(context.User.Id)</value>
+	<value>@(context.Deployment.Region)</value>
+</set-header>
