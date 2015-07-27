@@ -2,10 +2,10 @@
   "swagger": "2.0",
   "info": {
     "title": "Calculator",
-    "description": "Arithemtics over HTTP!",
+    "description": "Arithmetics over HTTP!",
     "version": "1.0"
   },
-  "host": "calcapi.cloudapp.net",
+  "host": "apimaaddemo.azurewebsites.net",
   "basePath": "/api",
   "schemes": [
     "http"
