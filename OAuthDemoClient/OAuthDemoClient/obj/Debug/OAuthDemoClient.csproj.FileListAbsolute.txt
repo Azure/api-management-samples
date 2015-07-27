@@ -1,0 +1,17 @@
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\OAuthDemoClient.exe.config
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\OAuthDemoClient.exe
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\OAuthDemoClient.pdb
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\System.Net.Http.Extensions.dll
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\System.Net.Http.Primitives.dll
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\System.Net.Http.Extensions.xml
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\bin\Debug\System.Net.Http.Primitives.xml
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\obj\Debug\OAuthDemoClient.csproj.App.config
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\obj\Debug\OAuthDemoClient.csprojResolveAssemblyReference.cache
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\obj\Debug\OAuthDemoClient.Form1.resources
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\obj\Debug\OAuthDemoClient.Properties.Resources.resources
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\obj\Debug\OAuthDemoClient.csproj.GenerateResource.Cache
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\obj\Debug\OAuthDemoClient.exe
+c:\users\mijiang\documents\visual studio 2013\Projects\OAuthDemoClient\OAuthDemoClient\obj\Debug\OAuthDemoClient.pdb
