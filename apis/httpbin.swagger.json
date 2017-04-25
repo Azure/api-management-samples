@@ -6,7 +6,7 @@
     "version": "1.0"
   },
   "host": "httpbin.org",
-  "basePath": "",
+  "basePath": "/",
   "schemes": [
     "http",
     "https"
