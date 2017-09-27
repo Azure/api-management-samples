@@ -32,16 +32,14 @@ $parameters = @{
 }
 
 
-$gitAccess = Get-AzureRmApiManagementTenantGitAccess -Context $context
-$userId = $gitAccess.Id
+$managementAccess = Get-AzureRmApiManagementTenantAccess -Context $context
+$userId = $managementAccess.Id
 
 $resourceName = $ServiceName + "/" +$userId
 
-$gitUserName = 'apim'
-$gitPassword = Invoke-AzureRmResourceAction  -ResourceGroupName $ResourceGroup -ResourceType 'Microsoft.ApiManagement/service/users' -Action 'token' -ResourceName $resourceName -ApiVersion "2017-03-01" -Parameters $parameters -Force
+$managementToken = Invoke-AzureRmResourceAction  -ResourceGroupName $ResourceGroup -ResourceType 'Microsoft.ApiManagement/service/users' -Action 'token' -ResourceName $resourceName -ApiVersion "2017-03-01" -Parameters $parameters -Force
 
 return @{
-GitUserName=$gitUserName
-GitPassword=$gitPassword.value
+Token='SharedAccessSignature ' + $managementToken.value
 }
 
