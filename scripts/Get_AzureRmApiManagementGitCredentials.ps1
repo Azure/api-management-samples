@@ -24,7 +24,7 @@
 )
 
 ## Switch to Subscription
-Select-AzureRmSubscription -SubscriptionId $subscriptionId
+$sub = Select-AzureRmSubscription -SubscriptionId $subscriptionId
 
 $context = New-AzureRmApiManagementContext -ResourceGroupName $ResourceGroup -ServiceName $ServiceName
 $expiry = (Get-Date).ToUniversalTime() + $ExpiryTimespan
