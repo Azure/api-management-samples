@@ -1,0 +1,12 @@
+<policies>
+	<inbound>
+		<base />
+		<rewrite-uri template="/forecast/{{forecast-key}}/{latitude},{longitude}" />
+	</inbound>
+	<outbound>
+		<base />
+	</outbound>
+	<backend>
+		<base />
+	</backend>
+</policies>

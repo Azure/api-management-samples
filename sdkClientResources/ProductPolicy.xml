@@ -1,0 +1,12 @@
+<policies>
+	<inbound>
+		<quota calls="100000" renewal-period="3600"/>
+		<base />
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+	</outbound>
+</policies>
