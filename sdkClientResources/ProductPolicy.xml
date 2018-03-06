@@ -1,0 +1,16 @@
+<policies>
+	<inbound>
+		<quota calls="100000" renewal-period="3600">
+			<api name="(Final) Local Weather API" calls="18000">
+				<operation name="Get Weather By Postal Code" calls="0" />
+			</api>
+		</quota>
+		<base />
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+	</outbound>
+</policies>

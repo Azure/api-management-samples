@@ -1,0 +1,15 @@
+<policies>
+	<inbound>
+		<base />
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+		<set-header name="X-Forecast-API-Calls" exists-action="delete" />
+		<set-header name="X-Content-Type-Options" exists-action="delete" />
+		<set-header name="X-Response-Time" exists-action="delete" />
+		<set-header name="X-Hostname" exists-action="delete" />
+	</outbound>
+</policies>
