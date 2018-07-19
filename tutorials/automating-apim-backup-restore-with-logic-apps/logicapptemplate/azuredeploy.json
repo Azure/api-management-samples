@@ -1,0 +1,171 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logicAppName": {
+      "type": "string",
+      "defaultValue": "GenericAPIMBackupRestore",
+      "metadata": {
+        "description": "Name of the Logic App."
+      }
+    },
+    "logicAppLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "allowedValues": [
+        "[resourceGroup().location]",
+        "eastasia",
+        "southeastasia",
+        "centralus",
+        "eastus",
+        "eastus2",
+        "westus",
+        "northcentralus",
+        "southcentralus",
+        "northeurope",
+        "westeurope",
+        "japanwest",
+        "japaneast",
+        "brazilsouth",
+        "australiaeast",
+        "australiasoutheast",
+        "westcentralus",
+        "westus2"
+      ],
+      "metadata": {
+        "description": "Location of the Logic App."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('logicAppName')]",
+      "location": "[parameters('logicAppLocation')]",
+      "dependsOn": [],
+      "properties": {
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "properties": {
+                    "accessKey": {
+                      "type": "string"
+                    },
+                    "apimInstance": {
+                      "type": "string"
+                    },
+                    "applicationId": {
+                      "type": "string"
+                    },
+                    "backupName": {
+                      "type": "string"
+                    },
+                    "clientSecret": {
+                      "type": "string"
+                    },
+                    "containerName": {
+                      "type": "string"
+                    },
+                    "operation": {
+                      "type": "string"
+                    },
+                    "resourceGroup": {
+                      "type": "string"
+                    },
+                    "storageAccount": {
+                      "type": "string"
+                    },
+                    "subscriptionId": {
+                      "type": "string"
+                    },
+                    "tenantId": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "actions": {
+            "Create_Auhtentication_Body": {
+              "runAfter": {},
+              "type": "Compose",
+              "inputs": "client_id=@{triggerBody()?['applicationId']}&client_secret=@{triggerBody()?['clientSecret']}&grant_type=client_credentials&resource=https://management.azure.com"
+            },
+            "Create_Authentication_Header": {
+              "runAfter": {
+                "Request_Auhtentication_Token": [
+                  "Succeeded"
+                ]
+              },
+              "type": "InitializeVariable",
+              "inputs": {
+                "variables": [
+                  {
+                    "name": "bearertoken",
+                    "type": "String",
+                    "value": "@{concat('Bearer ',body('Request_Auhtentication_Token')['access_token'])}"
+                  }
+                ]
+              }
+            },
+            "Invoke_Management_API": {
+              "runAfter": {
+                "Create_Authentication_Header": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Http",
+              "inputs": {
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@variables('bearertoken')"
+                },
+                "body": {
+                  "accessKey": "@{triggerBody()?['accessKey']}",
+                  "backupname": "@{triggerBody()?['backupName']}",
+                  "containerName": "@{triggerBody()?['containerName']}",
+                  "storageAccount": "@{triggerBody()?['storageAccount']}"
+                },
+                "headers": {
+                  "Content-Type": "application/json"
+                },
+                "method": "POST",
+                "uri": "https://management.azure.com/subscriptions/@{triggerBody()?['subscriptionId']}/resourceGroups/@{triggerBody()?['resourceGroup']}/providers/Microsoft.ApiManagement/service/@{triggerBody()?['apimInstance']}/@{triggerBody()?['operation']}?api-version=2014-02-14"
+              }
+            },
+            "Request_Auhtentication_Token": {
+              "runAfter": {
+                "Create_Auhtentication_Body": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Http",
+              "inputs": {
+                "body": "@outputs('Create_Auhtentication_Body')",
+                "headers": {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "method": "POST",
+                "uri": "https://login.microsoftonline.com/@{triggerBody()?['tenantId']}/oauth2/token"
+              }
+            }
+          },
+          "outputs": {}
+        },
+        "parameters": {}
+      }
+    }
+  ],
+  "outputs": {}
+}
