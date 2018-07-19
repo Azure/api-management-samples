@@ -160,4 +160,4 @@ Note that the authentication method is set to Raw and has the value of the beare
 
 3. To allow more granular access control, clone the Logic App and separate two instances into backup and restore. To do that, hard-code backup or restore on the Management API call respectively.
 
-You can find an ARM template to deploy the DR Logic App [here](./logicappstemplate/).
+You can find an ARM template to deploy the DR Logic App [here](./logicapptemplate/).
