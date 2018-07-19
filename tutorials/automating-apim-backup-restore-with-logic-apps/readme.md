@@ -1,5 +1,7 @@
 # Automating API Management Backup and Restore with Logic Apps
 
+*Originally posted by [Wagner Silveira](https://twitter.com/wsilveiranz) on [Note to Self](https://notetoself.tech/2018/06/25/automating-api-management-backup-and-restore-with-logic-apps/) Blog*
+
 The following tutorial walks you through setting up a disaster recovery (DR) strategy for a solution that is based on API Management, Azure Functions and Service Bus. Most of the deployment to the secondary site is dealt by VSTS, but one of the main issues could be API Management instance Standard tier, which doesn't allow multi-region deployments. The Management REST API needs to be leveraged to allow backing up all API Management configuration, including users, API policies and subscriptions. The API calls for backup and restore are quite straightforward, but they require an authorization token, which must be requested beforehand. This process can be automated with Azure Logic Apps.
 
 ## Preparing the environment
@@ -158,4 +160,4 @@ Note that the authentication method is set to Raw and has the value of the beare
 
 3. To allow more granular access control, clone the Logic App and separate two instances into backup and restore. To do that, hard-code backup or restore on the Management API call respectively.
 
-You can find an ARM template to deploy the DR Logic App [here](https://github.com/wsilveiranz/apimbackuprestore).
+You can find an ARM template to deploy the DR Logic App [here](./logicappstemplate/).
