@@ -1,0 +1,8 @@
+<!-- Copy this snippet into the inbound element to direct a percentage of traffic to a canary backend URL -->
+<set-variable name="canaryPercentage" value="@(15)"/>
+<set-backend-service base-url="https://azfuncapi.azure-api.net/azfunchttpappsvc/api/HttpTriggerCSharp1"/>
+<choose>
+    <when condition="@(context.Variables.GetValueOrDefault<int>("canaryPercentage") < (new Random().Next(1, 100)))">
+        <set-backend-service base-url="https://azfuncapi.azure-api.net/azfuncappsvc1/api/HttpTriggerCSharp1"/>
+    </when>
+</choose>
