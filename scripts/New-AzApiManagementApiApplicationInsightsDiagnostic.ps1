@@ -47,4 +47,4 @@ Get-AzApiManagementLogger -Context $context -LoggerId $loggerId
 
 $resourceId = "/subscriptions/" + $SubscriptionId + "/resourceGroups/" + $ResourceGroup + "/providers/Microsoft.ApiManagement/service/" + $ServiceName + "/apis/" + $apiId + "/diagnostics/applicationinsights"
 
-New-AzResource -ResourceId $resourceId -Properties $prop -ApiVersion $apiVersion
+New-AzResource -ResourceId $resourceId -Properties $prop -ApiVersion $apiVersion -Force
