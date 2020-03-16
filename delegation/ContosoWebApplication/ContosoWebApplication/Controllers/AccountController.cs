@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -23,15 +23,25 @@ namespace ContosoWebApplication.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        string ApimRestHost = "https://contosoinc.management.azure-api.net/";
-        string ApimRestId = "547f835d8b70eb0628030003";
+        string resourceUri = "subscriptions/<your subscription ID>/resourceGroups/<Your resource group>/providers/Microsoft.ApiManagement/service/<your apim service name>/";
+        // Management API URL (which you will find in the "Management API" blade of APIM) https://docs.microsoft.com/en-us/rest/api/apimanagement/apimanagementrest/api-management-rest 
+        //Management API + Resource URI
+        string ApimRestHost = "https://<Your service name>.management.azure-api.net/subscriptions/<your subscription ID>/resourceGroups/<Your resource group>/providers/Microsoft.ApiManagement/service/<your apim service name>/";
+        //Identifier under credentials
+        string ApimRestId = "integration"; 
+        //Primary key
         string ApimRestPK = "<token>";
-        System.DateTime ApimRestExpiry = DateTime.UtcNow.AddDays(10);
-        string ApimRestApiVersion = "2014-02-14-preview";
+
+        DateTime ApimRestExpiry = DateTime.UtcNow.AddDays(10);
+        string ApimRestApiVersion = "2019-01-01";
+
+        string developerPortalUrl = "https://<your service name>.<portal or developer>.azure-api.net";
 
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
+            //If the server only supports higher TLS version like TLS 1.2 only, it will still fail unless your client PC is configured to use higher TLS version by default. To overcome this problem add the following in your code.
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
         }
 
         public AccountController(UserManager<ApplicationUser> userManager)
@@ -139,7 +149,6 @@ namespace ContosoWebApplication.Controllers
                     {
                         client.BaseAddress = new Uri(ApimRestHost);
                         client.DefaultRequestHeaders.Add("Authorization", ApimRestAuthHeader());
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/json"));
 
                         var ApimUser = new
                         {
@@ -152,14 +161,14 @@ namespace ContosoWebApplication.Controllers
 
                         var ApimUserJson = SerializeToJson(ApimUser);
 
-                        HttpResponseMessage response = await client.PutAsync("/users/" + user.Id + "?api-version=" + ApimRestApiVersion, new StringContent(ApimUserJson, Encoding.UTF8, "text/json"));
+                        HttpResponseMessage response = await client.PutAsync("users/" + user.Id + "?api-version=" + ApimRestApiVersion, this.GetContent(ApimUserJson));
                         if (response.IsSuccessStatusCode)
                         {
                             //User created successfully
 
                             await SignInAsync(user, isPersistent: false);
 
-                            if (model.ReturnUrl != "")
+                            if (string.IsNullOrEmpty(model.ReturnUrl))
                                 return Redirect(model.ReturnUrl);
                             else
                                 return RedirectToAction("Index", "Home");
@@ -406,7 +415,13 @@ namespace ContosoWebApplication.Controllers
             }
             base.Dispose(disposing);
         }
-
+        
+        private StringContent GetContent(string content)
+        {
+            string requestBody = (string.IsNullOrEmpty(content)) ? "" : "{ \"properties\" :" + content + "}";
+            return new StringContent(requestBody, Encoding.UTF8, "application/json");
+        }
+        
         public async Task<ActionResult> Delegate()
         {
             string key = "<key>";
@@ -415,14 +430,15 @@ namespace ContosoWebApplication.Controllers
             string subscriptionId = Request.QueryString["subscriptionId"];
             string userId = Request.QueryString["userId"];
             string salt = Request.QueryString["salt"];
-            string signature;
+            string operations = Request.QueryString["operation"];
+            string signature = string.Empty;
 
 
             //First, validate the signature of the request
 
             var encoder = new HMACSHA512(Convert.FromBase64String(key));
 
-            switch (Request.QueryString["operation"])
+            switch (operations)
             {
                 case "SignIn":
                     signature = Convert.ToBase64String(encoder.ComputeHash(Encoding.UTF8.GetBytes(salt + "\n" + returnUrl)));
@@ -438,7 +454,6 @@ namespace ContosoWebApplication.Controllers
                     signature = Convert.ToBase64String(encoder.ComputeHash(Encoding.UTF8.GetBytes(salt + "\n" + userId)));
                     break;
                 default:
-                    signature = "";
                     break;
             }
 
@@ -461,36 +476,33 @@ namespace ContosoWebApplication.Controllers
                             {
                                 client.BaseAddress = new Uri(ApimRestHost);
                                 client.DefaultRequestHeaders.Add("Authorization", ApimRestAuthHeader());
-                                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/json"));
 
-                                HttpResponseMessage response = await client.PostAsync("/users/" + User.Identity.GetUserId() + "/generateSsoUrl?api-version=" + ApimRestApiVersion, new StringContent("", Encoding.UTF8, "text/json"));
+                                HttpResponseMessage response = await client.PostAsync("users/" + User.Identity.GetUserId() + "/generateSsoUrl?api-version=" + ApimRestApiVersion, this.GetContent(""));
                                 if (response.IsSuccessStatusCode)
                                 {
                                     //We got an SSO token - redirect
                                     HttpContent receiveStream = response.Content;
                                     var SsoUrlJson = await receiveStream.ReadAsStringAsync();
                                     SsoUrl su = DeserializeToJson<SsoUrl>(SsoUrlJson);
+                                    
+                                    //Currently this is returing the old developer portal url, if you want to implement it with new developer portal please use .Replace("portal","developer") or similar to get it to work.
+                                    //We have work item for this and should be fixed soon.
+                                    //return Redirect(su.value.Replace(".portal.", ".developer."));
                                     return Redirect(su.value);
                                 }
                                 else
                                 {
                                     @ViewBag.Message = "APIM REST Connection Error: " + response.StatusCode;
                                     return View();
-                                }
-                                        
+                                }           
                             }
-                        }
-                        break;
-                           
+                        }  
                     case "Subscribe":
                     case "Unsubscribe":
-                        return RedirectToAction("Product", "Account", new { operation = Request.QueryString["operation"], returnUrl = Request.QueryString["returnUrl"], productId = Request.QueryString["productId"], userId = Request.QueryString["userId"], subscriptionId = Request.QueryString["subscriptionId"] });
-                        break;
-
+                        return RedirectToAction("Product", "Account", new { operation = operations, returnUrl = returnUrl, productId = productId, userId = userId, subscriptionId = subscriptionId });
                     case "ChangeProfile":
                     case "ChangePassword":
-                        return RedirectToAction("Manage", "Account", new { returnUrl = Request.QueryString["returnUrl"] });
-                            break;
+                        return RedirectToAction("Manage", "Account", new { returnUrl = returnUrl });
                             default:
                     return View();
                 }
@@ -511,7 +523,7 @@ namespace ContosoWebApplication.Controllers
             ViewBag.Operation = Request.QueryString["operation"];
             ViewBag.ReturnUrl = Request.QueryString["returnUrl"];
 
-            //Set the proper title based on the operation at hadnd
+            //Set the proper title based on the operation at hand
             ViewBag.Title = "Product Subscription";
 
             switch (Request.QueryString["operation"])
@@ -534,35 +546,34 @@ namespace ContosoWebApplication.Controllers
                 {
                     client.BaseAddress = new Uri(ApimRestHost);
                     client.DefaultRequestHeaders.Add("Authorization", ApimRestAuthHeader());
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/json"));
 
                     HttpResponseMessage response;
 
                     switch (Request.QueryString["operation"])
                     {
                         case "Subscribe":
+                            Guid subscriptionId = Guid.NewGuid();
+                            
                             var ApimSubscription = new
                             {
-                                userId = "/users/" + Request.QueryString["userId"],
-                                productId = "/products/" + Request.QueryString["productId"],
-                                state = "active"
+                                ownerId = resourceUri + "users/" + Request.QueryString["userId"],
+                                scope = resourceUri + "products/" + Request.QueryString["productId"],
+                                displayName = subscriptionId
                             };
 
                             var ApimSubscriptionJson = SerializeToJson(ApimSubscription);
 
-                            Guid subscriptionId = Guid.NewGuid();
-
-                            response = await client.PutAsync("/subscriptions/" + subscriptionId + "?api-version=" + ApimRestApiVersion, new StringContent(ApimSubscriptionJson, Encoding.UTF8, "text/json"));
+                            response = await client.PutAsync("subscriptions/" + subscriptionId + "?api-version=" + ApimRestApiVersion, this.GetContent(ApimSubscriptionJson));
 
                             break;
 
                         case "Unsubscribe":
                             client.DefaultRequestHeaders.Add("If-Match", "*");
-                            response = await client.DeleteAsync("/subscriptions/" + Request.QueryString["subscriptionId"] + "?api-version=" + ApimRestApiVersion);
+                            response = await client.DeleteAsync("subscriptions/" + Request.QueryString["subscriptionId"] + "?api-version=" + ApimRestApiVersion);
                             break;
 
                         default:
-                            response = new HttpResponseMessage(System.Net.HttpStatusCode.Unused);
+                            response = new HttpResponseMessage(HttpStatusCode.Unused);
                             break;
                     }
 
@@ -571,11 +582,9 @@ namespace ContosoWebApplication.Controllers
                         //Subscription created
 
                         //return Redirect(Request.QueryString["returnUrl"]);
-                        return Redirect("https://contosoinc.portal.azure-api.net/developer");
+                        return Redirect(developerPortalUrl);
                     }
                 }
-
-
             }
 
             return View();
