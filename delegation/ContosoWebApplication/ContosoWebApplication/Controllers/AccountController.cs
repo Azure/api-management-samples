@@ -476,8 +476,17 @@ namespace ContosoWebApplication.Controllers
                             {
                                 client.BaseAddress = new Uri(ApimRestHost);
                                 client.DefaultRequestHeaders.Add("Authorization", ApimRestAuthHeader());
-
-                                HttpResponseMessage response = await client.PostAsync("users/" + User.Identity.GetUserId() + "/generateSsoUrl?api-version=" + ApimRestApiVersion, this.GetContent(""));
+                                
+                                var ApimUser = new
+                                {
+                                    keyType = "primary",
+                                    expiry = ApimRestExpiry
+                                };
+                                
+                                var ApimUserJson = SerializeToJson(ApimUser);
+                                
+                                //We are deprecating generateSsoUrl and henceforth will use token to get primary key
+                                HttpResponseMessage response = await client.PostAsync("users/" + User.Identity.GetUserId() + "/token?api-version=" + ApimRestApiVersion, this.GetContent(ApimUserJson));
                                 if (response.IsSuccessStatusCode)
                                 {
                                     //We got an SSO token - redirect
@@ -485,10 +494,12 @@ namespace ContosoWebApplication.Controllers
                                     var SsoUrlJson = await receiveStream.ReadAsStringAsync();
                                     SsoUrl su = DeserializeToJson<SsoUrl>(SsoUrlJson);
                                     
+                                    //We need to encode the primary key before passing it to the sso url.
+                                    string url = string.Format("{0}/signin-sso?token={1}", developerPortalUrl, HttpUtility.UrlEncode(su.value));
                                     //Currently this is returing the old developer portal url, if you want to implement it with new developer portal please use .Replace("portal","developer") or similar to get it to work.
                                     //We have work item for this and should be fixed soon.
                                     //return Redirect(su.value.Replace(".portal.", ".developer."));
-                                    return Redirect(su.value);
+                                    return Redirect(url);
                                 }
                                 else
                                 {
