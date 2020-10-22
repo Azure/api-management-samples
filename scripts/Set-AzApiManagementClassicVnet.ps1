@@ -32,7 +32,7 @@ Select-AzSubscription -SubscriptionId $SubscriptionId
 $apimResource = Get-AzResource -ResourceType "microsoft.apimanagement/service" -ResourceGroupName $ResourceGroup -ResourceName $ServiceName -ApiVersion $apiVersion
 
 # update capacity
-$apimold.Sku.Capacity =$capacity
+$apimResource.Sku.Capacity =$capacity
 
 # Execute the operation
 $apimResource | Set-AzResource -Force 
