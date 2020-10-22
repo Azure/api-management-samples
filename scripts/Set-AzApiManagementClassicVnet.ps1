@@ -1,7 +1,7 @@
 param
 (
     [Parameter(Mandatory=$true)]
-    [string]$environment,
+    [string]$Environment,
 
     [Parameter(Mandatory = $True)]
     [System.String]
@@ -16,14 +16,14 @@ param
     $ServiceName,
 
     [Parameter(Mandatory = $True)]
-    [System.Int]
-    $capacity
+    [System.Int32]
+    $Capacity
 )
 
 #apiversion
 $apiVersion = "2019-12-01"
 
-Connect-AzAccount -Environment $environment 
+Connect-AzAccount -Environment $Environment 
 
 # switch to subscription
 Select-AzSubscription -SubscriptionId $SubscriptionId
@@ -32,7 +32,7 @@ Select-AzSubscription -SubscriptionId $SubscriptionId
 $apimResource = Get-AzResource -ResourceType "microsoft.apimanagement/service" -ResourceGroupName $ResourceGroup -ResourceName $ServiceName -ApiVersion $apiVersion
 
 # update capacity
-$apimResource.Sku.Capacity =$capacity
+$apimResource.Sku.Capacity =$Capacity
 
 # Execute the operation
 $apimResource | Set-AzResource -Force 
