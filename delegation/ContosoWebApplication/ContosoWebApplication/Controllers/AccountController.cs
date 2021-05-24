@@ -168,7 +168,7 @@ namespace ContosoWebApplication.Controllers
 
                             await SignInAsync(user, isPersistent: false);
 
-                            if (string.IsNullOrEmpty(model.ReturnUrl))
+                            if (!string.IsNullOrEmpty(model.ReturnUrl))
                                 return Redirect(model.ReturnUrl);
                             else
                                 return RedirectToAction("Index", "Home");
