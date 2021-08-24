@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "apiManagementServiceName":
+    {
+      "value": "demo-apim-vnet-injected"
+    },
+    "publisherEmail": {
+      "value": "apimgmt@microsoft.com"
+    },
+    "publisherName": {
+      "value": "Microsoft"
+    },
+    "virtualNetworkName": {
+      "value": ""
+    },
+    "publicIpName": {
+      "value": "apimSecurePublicIP"
+    }
+  }
+}
