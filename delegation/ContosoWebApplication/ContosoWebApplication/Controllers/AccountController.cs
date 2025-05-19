@@ -30,7 +30,7 @@ namespace ContosoWebApplication.Controllers
         //Identifier under credentials
         string ApimRestId = "integration"; 
         //Primary key
-        string ApimRestPK = "PbtTFo9SoK7PuX3SVkCzxPqQ5K90vGkyTJbYAkLYPjLvnNUJBiVrR35fEdYLBXLeYjwJcCR1CLeOQhlqEv137g==";
+        string ApimRestPK = "<token>";
 
         DateTime ApimRestExpiry = DateTime.UtcNow.AddDays(10);
         string ApimRestApiVersion = "2019-01-01";
@@ -424,7 +424,7 @@ namespace ContosoWebApplication.Controllers
         
         public async Task<ActionResult> Delegate()
         {
-            string key = "A83LOoMIlPULlEBu9GuIoZoT9HSMHhGZTlvjhw6FNgMO0gTSis4u0otFPdcelheOF7asMs6pQUSP66w8EqbBOg==";
+            string key = "<key>";
             string returnUrl = Request.QueryString["returnUrl"];
             string productId = Request.QueryString["productId"];
             string subscriptionId = Request.QueryString["subscriptionId"];
